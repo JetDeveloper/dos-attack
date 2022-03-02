@@ -1,0 +1,12 @@
+{
+  "name": "war",
+  "version": "1.0.0",
+  "description": "russian and belorussian services fuck off",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "0.26.0"
+  }
+}

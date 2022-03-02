@@ -1,0 +1,22 @@
+#node files
+npm-debug.log
+node_modules
+_node_modules
+
+#IDE's
+.idea
+.projects
+.netbeans
+.metadata
+.project
+.settings
+.svn
+*.iml
+
+# OS files
+.DS_Store
+dist
+
+coverage
+.nyc*
+xunit.xml
