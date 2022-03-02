@@ -1,13 +1,13 @@
 {
-  "name": "war",
-  "version": "1.0.0",
+  "name": "dos-attack",
+  "version": "1.0.1",
   "description": "russian and belorussian services fuck off",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "JetDeveloper",
   "license": "ISC",
   "dependencies": {
     "axios": "0.26.0"
