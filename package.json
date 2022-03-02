@@ -1,6 +1,6 @@
 {
   "name": "dos-attack",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "russian and belorussian services fuck off",
   "main": "index.js",
   "scripts": {
@@ -10,6 +10,7 @@
   "author": "JetDeveloper",
   "license": "ISC",
   "dependencies": {
-    "axios": "0.26.0"
+    "axios": "0.26.0",
+    "log4js": "6.4.2"
   }
 }
