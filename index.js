@@ -192,7 +192,9 @@ const targets = [
   'https://acs5.sbrf.ru/',
   'https://acs6.sbrf.ru/',
   'https://acs7.sbrf.ru/',
-  'https://acs8.sbrf.ru/'
+  'https://acs8.sbrf.ru/',
+
+  'https://savelife.pw/'
 ]
 
 function isDown (lastSuccessfulResponseTime) {
