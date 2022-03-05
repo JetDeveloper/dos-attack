@@ -1,6 +1,6 @@
 {
   "name": "dos-attack",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "russian and belarusian services fuck off",
   "main": "index.js",
   "scripts": {
