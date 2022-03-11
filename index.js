@@ -87,7 +87,7 @@ async function main () {
       }
     })
 
-    await new Promise(resolve => setTimeout(resolve, 100)) // delay for releasing event-loop for printing logo
+    await new Promise(resolve => setTimeout(resolve, 200)) // delay for releasing event-loop for printing logo
   }
 }
 
